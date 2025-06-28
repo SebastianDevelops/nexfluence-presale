@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    
+    <!-- Main Page -->
+    <url>
+        <loc>https://presale.nexfluence.tech/</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://presale.nexfluence.tech/assets/Nexus_Holding_Logo.png</image:loc>
+            <image:title>Nexfluence Logo - Web3 Influencer Marketing Platform</image:title>
+            <image:caption>Official logo of Nexfluence, the revolutionary Web3-native influencer marketing platform</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://presale.nexfluence.tech/assets/heroImg.png</image:loc>
+            <image:title>Nexfluence Hero Image - Future of Influence</image:title>
+            <image:caption>Hero image showcasing Nexfluence mascot and platform vision</image:caption>
+        </image:image>
+    </url>
+    
+    <!-- About Section -->
+    <url>
+        <loc>https://presale.nexfluence.tech/#about</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- Tokenomics Section -->
+    <url>
+        <loc>https://presale.nexfluence.tech/#tokenomics</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- Roadmap Section -->
+    <url>
+        <loc>https://presale.nexfluence.tech/#roadmap</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Team Section -->
+    <url>
+        <loc>https://presale.nexfluence.tech/#team</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- FAQ Section -->
+    <url>
+        <loc>https://presale.nexfluence.tech/#faq</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Community Section -->
+    <url>
+        <loc>https://presale.nexfluence.tech/#community</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Whitepaper PDF -->
+    <url>
+        <loc>https://presale.nexfluence.tech/assets/nexfluence_.pdf</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+</urlset>
