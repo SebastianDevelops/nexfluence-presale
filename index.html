@@ -122,7 +122,7 @@
       },
       "offers": {
         "@type": "Offer",
-        "price": "0.05",
+        "price": "0.075",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock",
         "validFrom": "2025-01-01",
@@ -388,6 +388,78 @@
             transform: translateY(-1px) rotateX(5deg);
             box-shadow: 0 6px 12px rgba(168, 85, 247, 0.3);
         }
+        
+        /* Currency Selector Styles */
+        .currency-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .currency-option {
+            background: rgba(18, 16, 38, 0.8);
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .currency-option:hover {
+            border-color: rgba(168, 85, 247, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.2);
+        }
+        .currency-option.active {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2));
+            border-color: #a855f7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+        .currency-option.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #3b82f6);
+        }
+        .currency-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .currency-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        .currency-rate {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+        
+        @media (max-width: 640px) {
+            .currency-selector {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .currency-option {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                text-align: left;
+            }
+            .currency-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -479,7 +551,7 @@
                     <div class="glassmorphism rounded-lg p-4 mb-6 border border-blue-500/30">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-gray-300 font-medium">Presale Progress</span>
-                            <span class="font-bold text-white"><span id="usdcRaised" class="text-blue-400">0</span> / <span id="hardCap" class="text-green-400">100,000</span> USDC</span>
+                            <span class="font-bold text-white">$<span id="usdcRaised" class="text-blue-400">0</span> / <span id="hardCap" class="text-green-400">15,000,000</span></span>
                         </div>
                         <div class="w-full bg-gray-700 rounded-full h-3 mb-2 overflow-hidden">
                             <div id="progressBar" class="progress-bar-inner h-3 rounded-full transition-all duration-1000" style="width: 0%;"></div>
@@ -493,7 +565,7 @@
                     <div class="text-center mb-6">
                         <div class="inline-flex items-center space-x-4 glassmorphism p-3 rounded-lg border border-purple-500/30">
                             <span class="text-gray-300">Price:</span>
-                            <span class="font-bold text-2xl text-purple-400">$0.05</span>
+                            <span class="font-bold text-2xl text-purple-400">$0.075</span>
                             <span class="text-gray-300">per NEX</span>
                         </div>
                     </div>
@@ -507,17 +579,48 @@
                     </div>
 
                     <div id="buy-view" class="hidden">
+                        <!-- Currency Selector -->
+                        <div class="currency-selector">
+                            <div class="currency-option active" data-currency="POL">
+                                <div class="currency-info">
+                                    <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/matic.svg" alt="POL" class="currency-icon w-6 h-6">
+                                    <div>
+                                        <div class="currency-name">POL</div>
+                                        <div class="currency-rate hidden">~$0.50</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="currency-option" data-currency="USDC">
+                                <div class="currency-info">
+                                    <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg" alt="USDC" class="currency-icon w-6 h-6">
+                                    <div>
+                                        <div class="currency-name">USDC</div>
+                                        <div class="currency-rate hidden">$1.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="currency-option" data-currency="USDT">
+                                <div class="currency-info">
+                                    <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdt.svg" alt="USDT" class="currency-icon w-6 h-6">
+                                    <div>
+                                        <div class="currency-name">USDT</div>
+                                        <div class="currency-rate hidden">$1.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="space-y-4">
                              <div class="relative">
-                                <input type="number" id="usdcAmount" placeholder="100" class="w-full bg-gray-900/70 border border-gray-600 rounded-lg p-4 text-white text-xl focus:ring-2 focus:ring-purple-500 focus:outline-none pr-24 transition-all">
-                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">USDC</span>
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400">$</div>
+                                <input type="number" id="paymentAmount" placeholder="100" class="w-full bg-gray-900/70 border border-gray-600 rounded-lg p-4 text-white text-xl focus:ring-2 focus:ring-purple-500 focus:outline-none pl-16 pr-24 transition-all">
+                                <span id="currencyBadge" class="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-lg text-sm font-bold">POL</span>
+                                <img id="currencySymbol" src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/matic.svg" alt="POL" class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6">
                             </div>
                             <div class="text-center text-gray-400">↓</div>
                             <div class="relative">
-                                <input type="number" id="nexAmount" placeholder="0" class="w-full bg-gray-900/70 border border-gray-600 rounded-lg p-4 text-white text-xl focus:ring-2 focus:ring-blue-500 focus:outline-none pr-20" readonly>
+                                <input type="number" id="nexAmount" placeholder="0" class="w-full bg-gray-900/70 border border-gray-600 rounded-lg p-4 text-white text-xl focus:ring-2 focus:ring-blue-500 focus:outline-none pl-16 pr-20" readonly>
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 font-bold">NEX</span>
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400">🪙</div>
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">N</div>
                             </div>
                         </div>
                         <button id="buyBtn" class="w-full mt-6 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-500 hover:to-green-500 text-white font-bold py-4 px-6 rounded-lg text-xl transition-all transform hover:scale-105 glow-blue">
@@ -718,6 +821,127 @@
                             <div class="text-3xl mb-3">🎁</div>
                             <h3 class="font-bold text-yellow-400 mb-2">Ecosystem Rewards</h3>
                             <p class="text-sm text-gray-300">Earn NEX for quality content and successful campaigns</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Fund Allocation & ROI Strategy -->
+                    <div class="mt-20">
+                        <div class="text-center mb-12">
+                            <h3 class="text-3xl sm:text-4xl font-bold orbitron text-white mb-4">$15M <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">Fund Allocation</span></h3>
+                            <p class="text-lg text-gray-300">Strategic deployment for maximum platform growth and investor returns</p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                            <div class="glassmorphism p-6 rounded-xl border border-blue-500/30 hover:border-blue-500/60 transition-all duration-300">
+                                <div class="text-3xl mb-3 text-center">🚀</div>
+                                <h4 class="font-bold text-blue-400 text-xl mb-2">Platform Development</h4>
+                                <div class="text-2xl font-bold text-white mb-2">$6M</div>
+                                <div class="text-sm text-gray-400 mb-3">40% of funds</div>
+                                <ul class="text-xs text-gray-300 space-y-1">
+                                    <li>• AI/ML Engineering Team</li>
+                                    <li>• Smart Contract Development</li>
+                                    <li>• Security Audits & Testing</li>
+                                    <li>• Mobile App Development</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="glassmorphism p-6 rounded-xl border border-green-500/30 hover:border-green-500/60 transition-all duration-300">
+                                <div class="text-3xl mb-3 text-center">📈</div>
+                                <h4 class="font-bold text-green-400 text-xl mb-2">Marketing & Growth</h4>
+                                <div class="text-2xl font-bold text-white mb-2">$4.5M</div>
+                                <div class="text-sm text-gray-400 mb-3">30% of funds</div>
+                                <ul class="text-xs text-gray-300 space-y-1">
+                                    <li>• Influencer Partnerships</li>
+                                    <li>• Brand Acquisition</li>
+                                    <li>• Community Building</li>
+                                    <li>• Global Marketing Campaigns</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="glassmorphism p-6 rounded-xl border border-purple-500/30 hover:border-purple-500/60 transition-all duration-300">
+                                <div class="text-3xl mb-3 text-center">💧</div>
+                                <h4 class="font-bold text-purple-400 text-xl mb-2">Liquidity & Exchange</h4>
+                                <div class="text-2xl font-bold text-white mb-2">$3M</div>
+                                <div class="text-sm text-gray-400 mb-3">20% of funds</div>
+                                <ul class="text-xs text-gray-300 space-y-1">
+                                    <li>• DEX Liquidity Pools</li>
+                                    <li>• CEX Listing Fees</li>
+                                    <li>• Market Making</li>
+                                    <li>• Trading Incentives</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="glassmorphism p-6 rounded-xl border border-yellow-500/30 hover:border-yellow-500/60 transition-all duration-300">
+                                <div class="text-3xl mb-3 text-center">⚖️</div>
+                                <h4 class="font-bold text-yellow-400 text-xl mb-2">Operations & Legal</h4>
+                                <div class="text-2xl font-bold text-white mb-2">$1.5M</div>
+                                <div class="text-sm text-gray-400 mb-3">10% of funds</div>
+                                <ul class="text-xs text-gray-300 space-y-1">
+                                    <li>• Legal Compliance</li>
+                                    <li>• Infrastructure Costs</li>
+                                    <li>• Business Operations</li>
+                                    <li>• Strategic Partnerships</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- ROI Projections -->
+                        <div class="glassmorphism p-8 rounded-2xl border border-green-500/30 mb-12">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6 text-center">💰 Investor ROI Potential</h3>
+                            <div class="grid md:grid-cols-3 gap-8">
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-green-400 mb-2">10x</div>
+                                    <div class="text-lg font-bold text-white mb-2">Conservative Target</div>
+                                    <div class="text-sm text-gray-300">$0.75 token price at platform launch with 10,000+ active users</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-blue-400 mb-2">25x</div>
+                                    <div class="text-lg font-bold text-white mb-2">Growth Target</div>
+                                    <div class="text-sm text-gray-300">$1.875 token price with 50,000+ users and major brand partnerships</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-purple-400 mb-2">100x</div>
+                                    <div class="text-lg font-bold text-white mb-2">Market Leader</div>
+                                    <div class="text-sm text-gray-300">$7.50 token price capturing 1% of $24B influencer marketing market</div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-4 bg-green-900/20 rounded-lg">
+                                <p class="text-sm text-green-300 text-center">🎯 <strong>Key Driver:</strong> Platform revenue sharing creates continuous buy pressure on NEX tokens, driving sustainable price appreciation as user base grows.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Competitive Advantage -->
+                        <div class="glassmorphism p-8 rounded-2xl border border-blue-500/30">
+                            <h3 class="text-2xl font-bold text-blue-400 mb-6 text-center">🏆 Why NEX Will Outperform</h3>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-white mb-4">🚀 First-Mover Advantage</h4>
+                                    <ul class="space-y-2 text-sm text-gray-300">
+                                        <li>• First Web3-native influencer platform</li>
+                                        <li>• No direct blockchain competitors</li>
+                                        <li>• 18-month head start on competition</li>
+                                        <li>• Patent-pending AI matching technology</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white mb-4">💎 Token Value Drivers</h4>
+                                    <ul class="space-y-2 text-sm text-gray-300">
+                                        <li>• Platform fee revenue sharing</li>
+                                        <li>• Staking rewards up to 50% APY</li>
+                                        <li>• Governance voting rights</li>
+                                        <li>• Limited supply with token burns</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <div class="inline-flex items-center space-x-4 bg-gradient-to-r from-blue-900/30 to-purple-900/30 p-4 rounded-lg">
+                                    <span class="text-2xl">📊</span>
+                                    <div class="text-left">
+                                        <div class="font-bold text-white">Market Opportunity: $24B → $84B by 2028</div>
+                                        <div class="text-sm text-gray-300">Capturing just 0.1% = $84M annual revenue</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1688,35 +1912,46 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONTRACT & PRESALE CONFIGURATION ---
+            const POLYGON_MAINNET_CHAIN_ID = '0x89'; // 137 in hex
             const PRESALE_CONTRACT_ADDRESS = "YOUR_PRESALE_CONTRACT_ADDRESS_HERE";
             const TOKEN_CONTRACT_ADDRESS = "YOUR_TOKEN_CONTRACT_ADDRESS_HERE";
-            const PRESALE_CONTRACT_ABI = [
-                {"inputs":[{"internalType":"address","name":"_tokenAddress","type":"address"},{"internalType":"uint256","name":"_hardCapInMatic","type":"uint256"},{"internalType":"uint256","name":"_durationInDays","type":"uint256"},{"internalType":"address","name":"initialOwner","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
-                {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"purchaser","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountMatic","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountTokens","type":"uint256"}],"name":"TokensPurchased","type":"event"},
-                {"inputs":[],"name":"buyTokens","outputs":[],"stateMutability":"payable","type":"function"},
-                {"inputs":[],"name":"endTime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-                {"inputs":[],"name":"getRemainingTime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-                {"inputs":[],"name":"hardCap","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-                {"inputs":[],"name":"startTime","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-                {"inputs":[],"name":"token","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-                {"inputs":[],"name":"weiRaised","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+            const USDC_CONTRACT_ADDRESS = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; // USDC on Polygon
+            const USDT_CONTRACT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT on Polygon
+            
+            const ERC20_ABI = [
+                "function balanceOf(address owner) view returns (uint256)",
+                "function transfer(address to, uint256 amount) returns (bool)",
+                "function transferFrom(address from, address to, uint256 amount) returns (bool)",
+                "function approve(address spender, uint256 amount) returns (bool)",
+                "function allowance(address owner, address spender) view returns (uint256)"
             ];
 
             let provider;
             let signer;
             let presaleContract;
-            let tokenPrice = 1000;
+            let usdcContract;
+            let usdtContract;
+            let selectedCurrency = 'POL';
+            let currencyRates = {
+                POL: 0.50,
+                USDC: 1.00,
+                USDT: 1.00
+            };
+            const tokenPriceUSD = 0.075;
 
             const connectWalletBtnHeader = document.getElementById('connectWalletBtnHeader');
             const connectWalletBtnMobile = document.getElementById('connectWalletBtnMobile');
             const connectWalletBtnMain = document.getElementById('connectWalletBtnMain');
             const buyBtn = document.getElementById('buyBtn');
             const userAddressEl = document.getElementById('userAddress');
-            const usdcAmountInput = document.getElementById('usdcAmount');
+            const paymentAmountInput = document.getElementById('paymentAmount');
             const nexAmountInput = document.getElementById('nexAmount');
+            const currencyBadge = document.getElementById('currencyBadge');
+            const currencySymbol = document.getElementById('currencySymbol');
             const progressBar = document.getElementById('progressBar');
             const weiRaisedEl = document.getElementById('weiRaised');
             const hardCapEl = document.getElementById('hardCap');
+            const currencyOptions = document.querySelectorAll('.currency-option');
             
             const connectWalletView = document.getElementById('connect-wallet-view');
             const buyView = document.getElementById('buy-view');
@@ -1732,10 +1967,37 @@
                 mobileMenu.classList.toggle('hidden');
             });
             
-            usdcAmountInput.addEventListener('input', () => {
-                const maticValue = parseFloat(usdcAmountInput.value) || 0;
-                nexAmountInput.value = (maticValue * tokenPrice).toFixed(2);
+            // Currency Selection
+            currencyOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    currencyOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    selectedCurrency = option.dataset.currency;
+                    updateCurrencyUI();
+                    calculateTokenAmount();
+                });
             });
+            
+            function updateCurrencyUI() {
+                const currencyData = {
+                    POL: { icon: 'https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/matic.svg', name: 'POL' },
+                    USDC: { icon: 'https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg', name: 'USDC' },
+                    USDT: { icon: 'https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdt.svg', name: 'USDT' }
+                };
+                
+                currencyBadge.textContent = currencyData[selectedCurrency].name;
+                currencySymbol.src = currencyData[selectedCurrency].icon;
+                currencySymbol.alt = currencyData[selectedCurrency].name;
+            }
+            
+            paymentAmountInput.addEventListener('input', calculateTokenAmount);
+            
+            function calculateTokenAmount() {
+                const paymentAmount = parseFloat(paymentAmountInput.value) || 0;
+                const usdValue = paymentAmount * currencyRates[selectedCurrency];
+                const tokenAmount = usdValue / tokenPriceUSD;
+                nexAmountInput.value = tokenAmount.toFixed(2);
+            }
 
             // --- Wallet Connection ---
             const allConnectBtns = [connectWalletBtnHeader, connectWalletBtnMobile, connectWalletBtnMain];
@@ -1746,33 +2008,54 @@
                     try {
                         provider = new ethers.BrowserProvider(window.ethereum);
                         await provider.send("eth_requestAccounts", []);
+                        
+                        // Check if on Polygon mainnet
+                        const network = await provider.getNetwork();
+                        if (network.chainId !== 137n) {
+                            await switchToPolygon();
+                        }
+                        
                         signer = await provider.getSigner();
                         const address = await signer.getAddress();
                         
-                        presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_CONTRACT_ABI, signer);
+                        // Initialize contracts
+                        presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, [], signer);
+                        usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, ERC20_ABI, signer);
+                        usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, ERC20_ABI, signer);
                         
                         updateUIForConnected(address);
                         updatePresaleStatus();
 
                     } catch (error) {
-                        console.error("User rejected connection:", error);
-                        showToast('Wallet connection failed.', 'error');
+                        console.error("Wallet connection error:", error);
+                        showToast('Wallet connection failed. Please ensure you\'re on Polygon mainnet.', 'error');
                     }
                 } else {
                     showToast('Please install MetaMask!', 'error');
                 }
             }
 
-            async function switchNetwork() {
+            async function switchToPolygon() {
                 try {
-                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: TARGET_CHAIN_ID }] });
+                    await window.ethereum.request({ 
+                        method: 'wallet_switchEthereumChain', 
+                        params: [{ chainId: POLYGON_MAINNET_CHAIN_ID }] 
+                    });
                 } catch (switchError) {
                     if (switchError.code === 4902) {
                         await window.ethereum.request({
                             method: 'wallet_addEthereumChain',
-                            params: [{ chainId: TARGET_CHAIN_ID, chainName: 'Polygon Amoy Testnet', rpcUrls: ['https://rpc-amoy.polygon.technology/'], nativeCurrency: { name: 'MATIC', decimals: 18, symbol: 'MATIC' }, blockExplorerUrls: ['https://www.oklink.com/amoy'] }],
+                            params: [{
+                                chainId: POLYGON_MAINNET_CHAIN_ID,
+                                chainName: 'Polygon Mainnet',
+                                rpcUrls: ['https://polygon-rpc.com/'],
+                                nativeCurrency: { name: 'POL', decimals: 18, symbol: 'POL' },
+                                blockExplorerUrls: ['https://polygonscan.com/']
+                            }]
                         });
-                    } else { throw new Error("Failed to switch network."); }
+                    } else { 
+                        throw new Error("Failed to switch to Polygon network."); 
+                    }
                 }
             }
 
@@ -1790,36 +2073,65 @@
 
             async function buyTokens() {
                 if (!signer) return showToast('Please connect wallet.', 'error');
-                const usdcAmount = usdcAmountInput.value;
-                if (!usdcAmount || parseFloat(usdcAmount) <= 0) return showToast('Enter a valid amount.', 'error');
+                const paymentAmount = paymentAmountInput.value;
+                if (!paymentAmount || parseFloat(paymentAmount) <= 0) return showToast('Enter a valid amount.', 'error');
 
                 try {
-                    const usdcValue = ethers.parseUnits(usdcAmount, 6); // USDC has 6 decimals
                     buyBtn.disabled = true;
+                    buyBtn.textContent = 'Processing...';
                     
-                    const allowance = await usdcContract.allowance(await signer.getAddress(), PRESALE_CONTRACT_ADDRESS);
-                    if (allowance < usdcValue) {
-                        showToast('Approving USDC spend...', 'info');
-                        buyBtn.textContent = 'Approving...';
-                        const approveTx = await usdcContract.approve(PRESALE_CONTRACT_ADDRESS, usdcValue);
-                        await approveTx.wait();
-                        showToast('Approved! Now confirming purchase...', 'info');
+                    if (selectedCurrency === 'POL') {
+                        // Buy with POL (native currency)
+                        const polAmount = ethers.parseEther(paymentAmount);
+                        const buyTx = await presaleContract.buyWithPOL({ value: polAmount });
+                        await buyTx.wait();
+                    } else if (selectedCurrency === 'USDC') {
+                        // Buy with USDC
+                        const usdcAmount = ethers.parseUnits(paymentAmount, 6); // USDC has 6 decimals
+                        const userAddress = await signer.getAddress();
+                        
+                        // Check allowance
+                        const allowance = await usdcContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
+                        if (allowance < usdcAmount) {
+                            showToast('Approving USDC spend...', 'info');
+                            buyBtn.textContent = 'Approving...';
+                            const approveTx = await usdcContract.approve(PRESALE_CONTRACT_ADDRESS, usdcAmount);
+                            await approveTx.wait();
+                        }
+                        
+                        buyBtn.textContent = 'Purchasing...';
+                        const buyTx = await presaleContract.buyWithUSDC(usdcAmount);
+                        await buyTx.wait();
+                    } else if (selectedCurrency === 'USDT') {
+                        // Buy with USDT
+                        const usdtAmount = ethers.parseUnits(paymentAmount, 6); // USDT has 6 decimals
+                        const userAddress = await signer.getAddress();
+                        
+                        // Check allowance
+                        const allowance = await usdtContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
+                        if (allowance < usdtAmount) {
+                            showToast('Approving USDT spend...', 'info');
+                            buyBtn.textContent = 'Approving...';
+                            const approveTx = await usdtContract.approve(PRESALE_CONTRACT_ADDRESS, usdtAmount);
+                            await approveTx.wait();
+                        }
+                        
+                        buyBtn.textContent = 'Purchasing...';
+                        const buyTx = await presaleContract.buyWithUSDT(usdtAmount);
+                        await buyTx.wait();
                     }
                     
-                    buyBtn.textContent = 'Purchasing...';
-                    const buyTx = await presaleContract.buyTokens(usdcValue);
-                    await buyTx.wait();
-                    
-                    showToast('Purchase successful!', 'success');
+                    showToast(`Purchase successful with ${selectedCurrency}!`, 'success');
                     updatePresaleStatus();
-                    usdcAmountInput.value = '';
+                    paymentAmountInput.value = '';
                     nexAmountInput.value = '';
 
                 } catch (err) {
+                    console.error('Purchase error:', err);
                     showToast(err.reason || 'Transaction failed.', 'error');
                 } finally {
                     buyBtn.disabled = false;
-                    buyBtn.textContent = 'Buy NEX';
+                    buyBtn.textContent = '🚀 Buy NEX Tokens';
                 }
             }
 
@@ -2241,6 +2553,7 @@
             });
 
             // --- Initial Load ---
+            updateCurrencyUI();
             renderTokenomicsChart();
             updatePresaleStatus();
         });
