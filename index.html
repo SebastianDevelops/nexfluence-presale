@@ -181,6 +181,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+    <!-- Production environment configuration -->
+    <script>
+        // Polygon Mainnet Configuration
+        const CONFIG = {
+            chainId: 137,
+            chainName: "Polygon Mainnet",
+            rpcUrl: "https://polygon-rpc.com/",
+            blockExplorerUrl: "https://polygonscan.com",
+            presaleContractAddress: "0x0000000000000000000000000000000000000000", // Replace after deployment
+            nexTokenAddress: "0x0000000000000000000000000000000000000000", // Replace after deployment
+            usdcTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", // USDC on Polygon
+            usdtTokenAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", // USDT on Polygon
+            maticTokenSymbol: "MATIC",
+            presaleDurationDays: 365, // 12 months
+            presaleTokenPrice: 0.05, // $0.05 per NEX
+            minPurchaseUsd: 100
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/typography@0.5.13/src/index.min.js"></script>
     <style>
         html { scroll-behavior: smooth; }
@@ -529,6 +547,10 @@
                         </div>
                     </div>
                     
+                    <div class="text-center mb-3">
+                        <h4 id="countdownLabel" class="text-lg font-semibold text-gray-300">Time Remaining</h4>
+                    </div>
+                    
                     <div id="countdown" class="grid grid-cols-4 gap-2 mb-6">
                         <div class="countdown-item glassmorphism p-3 rounded-lg text-center border border-blue-500/30">
                             <span id="days" class="block text-2xl sm:text-3xl font-bold text-blue-400">00</span>
@@ -565,7 +587,7 @@
                     <div class="text-center mb-6">
                         <div class="inline-flex items-center space-x-4 glassmorphism p-3 rounded-lg border border-purple-500/30">
                             <span class="text-gray-300">Price:</span>
-                            <span class="font-bold text-2xl text-purple-400">$0.075</span>
+                            <span class="font-bold text-2xl text-purple-400">$0.05</span>
                             <span class="text-gray-300">per NEX</span>
                         </div>
                     </div>
@@ -580,22 +602,25 @@
 
                     <div id="buy-view" class="hidden">
                         <!-- Currency Selector -->
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-400 mb-2 text-center">� Choose your payment currency (all converted to USDC)</p>
+                        </div>
                         <div class="currency-selector">
-                            <div class="currency-option active" data-currency="POL">
+                            <div class="currency-option" data-currency="POL">
                                 <div class="currency-info">
                                     <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/matic.svg" alt="POL" class="currency-icon w-6 h-6">
                                     <div>
                                         <div class="currency-name">POL</div>
-                                        <div class="currency-rate hidden">~$0.50</div>
+                                        <div class="currency-rate text-blue-400 text-xs">1 POL ≈ $0.50</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="currency-option" data-currency="USDC">
+                            <div class="currency-option active" data-currency="USDC">
                                 <div class="currency-info">
                                     <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg" alt="USDC" class="currency-icon w-6 h-6">
                                     <div>
                                         <div class="currency-name">USDC</div>
-                                        <div class="currency-rate hidden">$1.00</div>
+                                        <div class="currency-rate text-green-400 text-xs">1 USDC = $1.00</div>
                                     </div>
                                 </div>
                             </div>
@@ -604,7 +629,7 @@
                                     <img src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdt.svg" alt="USDT" class="currency-icon w-6 h-6">
                                     <div>
                                         <div class="currency-name">USDT</div>
-                                        <div class="currency-rate hidden">$1.00</div>
+                                        <div class="currency-rate text-blue-400 text-xs">1 USDT ≈ $1.00</div>
                                     </div>
                                 </div>
                             </div>
@@ -613,8 +638,8 @@
                         <div class="space-y-4">
                              <div class="relative">
                                 <input type="number" id="paymentAmount" placeholder="100" class="w-full bg-gray-900/70 border border-gray-600 rounded-lg p-4 text-white text-xl focus:ring-2 focus:ring-purple-500 focus:outline-none pl-16 pr-24 transition-all">
-                                <span id="currencyBadge" class="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-lg text-sm font-bold">POL</span>
-                                <img id="currencySymbol" src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/matic.svg" alt="POL" class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6">
+                                <span id="currencyBadge" class="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-lg text-sm font-bold">USDC</span>
+                                <img id="currencySymbol" src="https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg" alt="USDC" class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6">
                             </div>
                             <div class="text-center text-gray-400">↓</div>
                             <div class="relative">
@@ -1558,13 +1583,13 @@
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold orbitron text-white">Join Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Community</span></h2>
                 <p class="text-lg text-gray-300 mt-4 mb-8 max-w-2xl mx-auto">Stay up to date with the latest developments, chat with the team, and be the first to know about our platform launch.</p>
                 <div class="flex justify-center items-center space-x-4 sm:space-x-6">
-                    <a href="#" target="_blank" class="glassmorphism p-4 rounded-full hover:bg-purple-500/30 transition-colors glow-purple">
-                        <svg class="w-8 h-8 text-white" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Discord</title><path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 00-4.8852-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6174-1.2495a.077.077 0 00-.0785-.037fA19.7156 19.7156 0 003.6754 4.3698a.077.077 0 00-.0524.0255C.0948 6.6893-0.0031 9.049.0015 11.412a21.432 21.432 0 004.6948 9.3364.077.077 0 00.088.0166c.1932-.091.3817-.1875.5642-.2863a.077.077 0 00.0416-.0524c-.015-.0255-.031-.05-.046-.077-.046-.0596-.077-.1364-.092-.212a8.0312 8.0312 0 01-1.353-2.052.0741.0741 0 01.015-.088c.1288-.091.258-.1875.378-.2954a.077.077 0 01.088-.008c3.9877 1.6366 8.232 1.6366 12.2474 0a.077.077 0 01.088.008c.12.1165.25.212.3778.2954a.0741.0741 0 01.015.088c-.015.068-.046.152-.092.212-.015.0255-.031.05-.046.077a.077.077 0 00.0416.0524c.1825.099.371.1955.5642.2863a.077.077 0 00.088-.0166 21.432 21.432 0 004.6948-9.3364c.0046-2.3626-.0902-4.7225-1.4505-6.9982a.077.077 0 00-.0524-.0255zM8.02 15.3312c-.8258 0-1.4985-.922-1.4985-2.052s.6727-2.052 1.4985-2.052c.8258 0 1.4985.922 1.4985 2.052.0078 1.13-.6727 2.052-1.4985 2.052zm7.9528 0c-.8258 0-1.4985-.922-1.4985-2.052s.6727-2.052 1.4985-2.052c.8258 0 1.4985.922 1.4985 2.052s-.6727 2.052-1.4985 2.052z"/></svg>
+                    <a href="https://discord.gg/k7QqN6yp" target="_blank" class="glassmorphism p-4 rounded-full hover:bg-purple-500/30 transition-colors glow-purple">
+                        <svg class="w-8 h-8 text-white" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Discord</title><path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 00-4.8852-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6174-1.2495a.077.077 0 00-.0785-.037 19.7156 19.7156 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.946 2.4189-2.1569 2.4189Z"/></svg>
                     </a>
-                     <a href="#" target="_blank" class="glassmorphism p-4 rounded-full hover:bg-blue-500/30 transition-colors glow-blue">
-                        <svg class="w-8 h-8 text-white" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Telegram</title><path fill="currentColor" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.17.91-.494 1.208-.822 1.23-.696.045-1.225-.46-1.9-.902-1.018-.66-1.59-1.075-2.599-1.72-1.205-.765-.417-1.181.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.04-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.287-.788.057-.38.328-.75.888-1.11C3.498 12.59 2.02 12.04.994 11.75c-.12-.033-.205-.151-.186-.282.02-.132.12-.234.24-.261.002 0 6.45-2.102 7.575-2.547.242-.095 1.017-.41 1.406-.566.388-.155.733-.228.99-.23.116-.002.24 0 .358.005.118.005.217.018.328.043.11.025.221.058.328.113.107.055.195.122.25.195.055.073.078.15.073.213-.004.062-.036.16-.08.283a.56.56 0 0 1-.09.173z"/></svg>
+                     <a href="https://instagram.com/nexxfluence" target="_blank" class="glassmorphism p-4 rounded-full hover:bg-pink-500/30 transition-colors glow-purple">
+                        <svg class="w-8 h-8 text-white" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                     <a href="#" target="_blank" class="glassmorphism p-4 rounded-full hover:bg-pink-500/30 transition-colors glow-purple">
+                     <a href="https://x.com/NexxFluence?t=vwgDHcc9hqc3TjM9SFSIA&s=09" target="_blank" class="glassmorphism p-4 rounded-full hover:bg-pink-500/30 transition-colors glow-purple">
                         <svg class="w-8 h-8 text-white" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Twitter</title><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
                 </div>
@@ -1912,18 +1937,43 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONTRACT & PRESALE CONFIGURATION ---
+             const POLYGON_AMOY_CHAIN_ID = '0x13882';
             const POLYGON_MAINNET_CHAIN_ID = '0x89'; // 137 in hex
             const PRESALE_CONTRACT_ADDRESS = "YOUR_PRESALE_CONTRACT_ADDRESS_HERE";
-            const TOKEN_CONTRACT_ADDRESS = "YOUR_TOKEN_CONTRACT_ADDRESS_HERE";
-            const USDC_CONTRACT_ADDRESS = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; // USDC on Polygon
-            const USDT_CONTRACT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT on Polygon
+            const TOKEN_CONTRACT_ADDRESS = "0x86B77286EF38bFa9352a59d6Ec01D96F6d76DB18";
+            const USDC_CONTRACT_ADDRESS = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; // USDC on Polygon Mainnet
+            const USDT_CONTRACT_ADDRESS = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDT on Polygon Mainnet
+            const WMATIC_CONTRACT_ADDRESS = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"; // Wrapped MATIC on Polygon
+            const QUICKSWAP_ROUTER_ADDRESS = "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff"; // QuickSwap Router on Polygon
             
             const ERC20_ABI = [
                 "function balanceOf(address owner) view returns (uint256)",
                 "function transfer(address to, uint256 amount) returns (bool)",
                 "function transferFrom(address from, address to, uint256 amount) returns (bool)",
                 "function approve(address spender, uint256 amount) returns (bool)",
-                "function allowance(address owner, address spender) view returns (uint256)"
+                "function allowance(address owner, address spender) view returns (uint256)",
+                "function decimals() view returns (uint8)",
+                "function symbol() view returns (string)"
+            ];
+
+            // QuickSwap Router ABI (minimal for swapping)
+            const ROUTER_ABI = [
+                "function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts)",
+                "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable returns (uint[] memory amounts)",
+                "function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)",
+                "function WETH() external pure returns (address)"
+            ];
+
+            const PRESALE_ABI = [
+                "function nexToken() view returns (address)",
+                "function usdcToken() view returns (address)",
+                "function hardCapInUsdc() view returns (uint256)",
+                "function usdcRaised() view returns (uint256)",
+                "function startTime() view returns (uint256)",
+                "function endTime() view returns (uint256)",
+                "function buyTokens(uint256 _usdcAmount)",
+                "function TOKEN_PRICE_IN_CENTS() view returns (uint256)",
+                "event TokensPurchased(address indexed purchaser, uint256 amountUsdc, uint256 amountTokens)"
             ];
 
             let provider;
@@ -1931,13 +1981,68 @@
             let presaleContract;
             let usdcContract;
             let usdtContract;
-            let selectedCurrency = 'POL';
+            let routerContract;
+            let wmaticContract;
+            let selectedCurrency = 'USDC'; // Default to USDC since it's the only supported currency
             let currencyRates = {
                 POL: 0.50,
                 USDC: 1.00,
                 USDT: 1.00
             };
-            const tokenPriceUSD = 0.075;
+            const tokenPriceUSD = 0.05; // Updated to match contract price
+
+            // Function to fetch real-time currency rates from DEX
+            async function updateCurrencyRates() {
+                if (!routerContract) return;
+                
+                try {
+                    // Get POL to USDC rate
+                    const weth = await routerContract.WETH();
+                    const polAmount = ethers.parseEther("1"); // 1 POL
+                    
+                    // POL -> USDC
+                    const polPath = [weth, USDC_CONTRACT_ADDRESS];
+                    const polAmounts = await routerContract.getAmountsOut(polAmount, polPath);
+                    const polRate = Number(ethers.formatUnits(polAmounts[1], 6)); // USDC has 6 decimals
+                    
+                    // USDT -> USDC (should be close to 1:1)
+                    const usdtAmount = ethers.parseUnits("1", 6); // 1 USDT
+                    const usdtPath = [USDT_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS];
+                    const usdtAmounts = await routerContract.getAmountsOut(usdtAmount, usdtPath);
+                    const usdtRate = Number(ethers.formatUnits(usdtAmounts[1], 6));
+                    
+                    currencyRates = {
+                        POL: polRate,
+                        USDC: 1.00,
+                        USDT: usdtRate
+                    };
+                    
+                    updateCurrencyRateDisplay();
+                } catch (error) {
+                    console.error('Failed to fetch currency rates:', error);
+                    // Keep default rates if fetching fails
+                }
+            }
+
+            function updateCurrencyRateDisplay() {
+                currencyOptions.forEach(option => {
+                    const currency = option.dataset.currency;
+                    const rateEl = option.querySelector('.currency-rate');
+                    if (rateEl && currencyRates[currency]) {
+                        if (currency === 'USDC') {
+                            rateEl.textContent = '1 USDC = $1.00';
+                        } else if (currency === 'POL') {
+                            rateEl.textContent = `1 POL ≈ $${currencyRates[currency].toFixed(3)}`;
+                        } else if (currency === 'USDT') {
+                            rateEl.textContent = `1 USDT ≈ $${currencyRates[currency].toFixed(3)}`;
+                        }
+                    }
+                });
+            }
+
+            // Wallet connection state management
+            let isConnecting = false;
+            let isConnected = false;
 
             const connectWalletBtnHeader = document.getElementById('connectWalletBtnHeader');
             const connectWalletBtnMobile = document.getElementById('connectWalletBtnMobile');
@@ -2001,39 +2106,214 @@
 
             // --- Wallet Connection ---
             const allConnectBtns = [connectWalletBtnHeader, connectWalletBtnMobile, connectWalletBtnMain];
-            allConnectBtns.forEach(btn => btn.addEventListener('click', connectWallet));
-
-            async function connectWallet() {
+            
+            // Check if wallet is already connected on page load
+            checkWalletConnection();
+            
+            async function checkWalletConnection() {
                 if (typeof window.ethereum !== 'undefined') {
                     try {
-                        provider = new ethers.BrowserProvider(window.ethereum);
-                        await provider.send("eth_requestAccounts", []);
-                        
-                        // Check if on Polygon mainnet
-                        const network = await provider.getNetwork();
-                        if (network.chainId !== 137n) {
-                            await switchToPolygon();
+                        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                        if (accounts.length > 0) {
+                            // Wallet is already connected
+                            await initializeWallet(accounts[0]);
                         }
-                        
-                        signer = await provider.getSigner();
-                        const address = await signer.getAddress();
-                        
-                        // Initialize contracts
-                        presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, [], signer);
-                        usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, ERC20_ABI, signer);
-                        usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, ERC20_ABI, signer);
-                        
-                        updateUIForConnected(address);
-                        updatePresaleStatus();
-
                     } catch (error) {
-                        console.error("Wallet connection error:", error);
-                        showToast('Wallet connection failed. Please ensure you\'re on Polygon mainnet.', 'error');
+                        console.log('No wallet connected:', error);
                     }
-                } else {
-                    showToast('Please install MetaMask!', 'error');
                 }
             }
+
+            allConnectBtns.forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', connectWallet);
+                }
+            });
+
+            async function connectWallet() {
+                // Prevent multiple connection attempts
+                if (isConnecting || isConnected) {
+                    console.log('Wallet connection already in progress or connected');
+                    return;
+                }
+
+                if (typeof window.ethereum === 'undefined') {
+                    showToast('Please install MetaMask or another Web3 wallet!', 'error');
+                    return;
+                }
+
+                try {
+                    isConnecting = true;
+                    
+                    // Update button states
+                    allConnectBtns.forEach(btn => {
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.textContent = 'Connecting...';
+                        }
+                    });
+
+                    // Check if there are any existing accounts first
+                    try {
+                        const existingAccounts = await window.ethereum.request({ method: 'eth_accounts' });
+                        
+                        if (existingAccounts.length > 0) {
+                            // Already connected, just initialize
+                            await initializeWallet(existingAccounts[0]);
+                            return;
+                        }
+                    } catch (error) {
+                        console.log('No existing accounts:', error);
+                    }
+
+                    // Request new connection only if not already connected
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    
+                    // Use eth_requestAccounts to request connection
+                    const accounts = await window.ethereum.request({ 
+                        method: 'eth_requestAccounts' 
+                    });
+                    
+                    if (accounts.length === 0) {
+                        throw new Error('No accounts returned');
+                    }
+
+                    await initializeWallet(accounts[0]);
+
+                } catch (error) {
+                    console.error("Wallet connection error:", error);
+                    
+                    // Handle specific error cases
+                    if (error.code === -32002) {
+                        showToast('Connection request already pending. Please check your wallet or refresh the page.', 'error');
+                    } else if (error.code === 4001) {
+                        showToast('Connection rejected by user.', 'error');
+                    } else if (error.message && error.message.includes('already pending')) {
+                        showToast('Please check your wallet for a pending connection request.', 'error');
+                    } else {
+                        showToast('Wallet connection failed: ' + (error.message || 'Unknown error'), 'error');
+                    }
+                } finally {
+                    isConnecting = false;
+                    
+                    // Reset button states if connection failed
+                    if (!isConnected) {
+                        allConnectBtns.forEach(btn => {
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.textContent = 'Connect Wallet';
+                            }
+                        });
+                    }
+                }
+            }
+
+            async function initializeWallet(address) {
+                try {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    
+                    // Check if on correct network
+                    const network = await provider.getNetwork();
+                    if (network.chainId !== 137n) { // Polygon mainnet
+                        await switchToPolygon();
+                    }
+
+                    signer = await provider.getSigner();
+                    
+                    // Initialize contracts if addresses are available
+                    if (PRESALE_CONTRACT_ADDRESS && PRESALE_CONTRACT_ADDRESS !== "YOUR_PRESALE_CONTRACT_ADDRESS_HERE") {
+                        presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, signer);
+                    }
+                    if (USDC_CONTRACT_ADDRESS) {
+                        usdcContract = new ethers.Contract(USDC_CONTRACT_ADDRESS, ERC20_ABI, signer);
+                    }
+                    if (USDT_CONTRACT_ADDRESS) {
+                        usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, ERC20_ABI, signer);
+                    }
+                    
+                    // Initialize router and WMATIC contracts
+                    routerContract = new ethers.Contract(QUICKSWAP_ROUTER_ADDRESS, ROUTER_ABI, signer);
+                    wmaticContract = new ethers.Contract(WMATIC_CONTRACT_ADDRESS, ERC20_ABI, signer);
+                    
+                    isConnected = true;
+                    updateUIForConnected(address);
+                    updatePresaleStatus();
+                    
+                    // Update currency rates after contracts are initialized
+                    await updateCurrencyRates();
+                    
+                    // Update rates every 30 seconds
+                    setInterval(updateCurrencyRates, 30000);
+                    
+                    showToast('Wallet connected successfully!', 'success');
+
+                } catch (error) {
+                    console.error("Wallet initialization error:", error);
+                    showToast('Failed to initialize wallet: ' + error.message, 'error');
+                    isConnected = false;
+                }
+            }
+
+            // Listen for account changes
+            if (typeof window.ethereum !== 'undefined') {
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    if (accounts.length === 0) {
+                        // Wallet disconnected
+                        isConnected = false;
+                        resetUIForDisconnected();
+                    } else {
+                        // Account changed
+                        initializeWallet(accounts[0]);
+                    }
+                });
+
+                window.ethereum.on('chainChanged', (chainId) => {
+                    // Reload page on chain change for simplicity
+                    window.location.reload();
+                });
+            }
+
+            function resetUIForDisconnected() {
+                if (userAddressEl) {
+                    userAddressEl.textContent = 'Not Connected';
+                }
+                allConnectBtns.forEach(btn => {
+                    if (btn) {
+                        btn.textContent = 'Connect Wallet';
+                        btn.disabled = false;
+                    }
+                });
+                if (connectWalletView) {
+                    connectWalletView.classList.remove('hidden');
+                }
+                if (buyView) {
+                    buyView.classList.add('hidden');
+                }
+            }
+
+            async function switchToAmoyTestnet() {
+            try {
+                await window.ethereum.request({ 
+                    method: 'wallet_switchEthereumChain', 
+                    params: [{ chainId: POLYGON_AMOY_CHAIN_ID }] 
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: POLYGON_AMOY_CHAIN_ID,
+                            chainName: 'Polygon Amoy Testnet',
+                            rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+                            nativeCurrency: { name: 'MATIC', decimals: 18, symbol: 'MATIC' },
+                            blockExplorerUrls: ['https://amoy.polygonscan.com/']
+                        }]
+                    });
+                } else { 
+                    throw new Error("Failed to switch to Polygon Amoy testnet."); 
+                }
+            }
+        }
 
             async function switchToPolygon() {
                 try {
@@ -2060,19 +2340,29 @@
             }
 
             function updateUIForConnected(address) {
-                userAddressEl.textContent = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+                if (userAddressEl) {
+                    userAddressEl.textContent = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+                }
                 allConnectBtns.forEach(btn => {
-                    btn.textContent = `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
-                    btn.disabled = true;
+                    if (btn) {
+                        btn.textContent = `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
+                        btn.disabled = true;
+                    }
                 });
-                connectWalletView.classList.add('hidden');
-                buyView.classList.remove('hidden');
+                if (connectWalletView) {
+                    connectWalletView.classList.add('hidden');
+                }
+                if (buyView) {
+                    buyView.classList.remove('hidden');
+                }
             }
 
             buyBtn.addEventListener('click', buyTokens);
 
             async function buyTokens() {
                 if (!signer) return showToast('Please connect wallet.', 'error');
+                if (!presaleContract) return showToast('Presale contract not available.', 'error');
+                
                 const paymentAmount = paymentAmountInput.value;
                 if (!paymentAmount || parseFloat(paymentAmount) <= 0) return showToast('Enter a valid amount.', 'error');
 
@@ -2080,119 +2370,339 @@
                     buyBtn.disabled = true;
                     buyBtn.textContent = 'Processing...';
                     
-                    if (selectedCurrency === 'POL') {
-                        // Buy with POL (native currency)
-                        const polAmount = ethers.parseEther(paymentAmount);
-                        const buyTx = await presaleContract.buyWithPOL({ value: polAmount });
-                        await buyTx.wait();
-                    } else if (selectedCurrency === 'USDC') {
-                        // Buy with USDC
-                        const usdcAmount = ethers.parseUnits(paymentAmount, 6); // USDC has 6 decimals
-                        const userAddress = await signer.getAddress();
-                        
-                        // Check allowance
-                        const allowance = await usdcContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
-                        if (allowance < usdcAmount) {
-                            showToast('Approving USDC spend...', 'info');
-                            buyBtn.textContent = 'Approving...';
-                            const approveTx = await usdcContract.approve(PRESALE_CONTRACT_ADDRESS, usdcAmount);
-                            await approveTx.wait();
-                        }
-                        
-                        buyBtn.textContent = 'Purchasing...';
-                        const buyTx = await presaleContract.buyWithUSDC(usdcAmount);
-                        await buyTx.wait();
+                    const userAddress = await signer.getAddress();
+
+                    if (selectedCurrency === 'USDC') {
+                        await buyWithUSDC(paymentAmount, userAddress);
                     } else if (selectedCurrency === 'USDT') {
-                        // Buy with USDT
-                        const usdtAmount = ethers.parseUnits(paymentAmount, 6); // USDT has 6 decimals
-                        const userAddress = await signer.getAddress();
-                        
-                        // Check allowance
-                        const allowance = await usdtContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
-                        if (allowance < usdtAmount) {
-                            showToast('Approving USDT spend...', 'info');
-                            buyBtn.textContent = 'Approving...';
-                            const approveTx = await usdtContract.approve(PRESALE_CONTRACT_ADDRESS, usdtAmount);
-                            await approveTx.wait();
-                        }
-                        
-                        buyBtn.textContent = 'Purchasing...';
-                        const buyTx = await presaleContract.buyWithUSDT(usdtAmount);
-                        await buyTx.wait();
+                        await buyWithUSDT(paymentAmount, userAddress);
+                    } else if (selectedCurrency === 'POL') {
+                        await buyWithPOL(paymentAmount, userAddress);
                     }
                     
-                    showToast(`Purchase successful with ${selectedCurrency}!`, 'success');
+                    // Refresh presale status and clear inputs
                     updatePresaleStatus();
                     paymentAmountInput.value = '';
                     nexAmountInput.value = '';
+                    showToast('Purchase successful!', 'success');
 
                 } catch (err) {
                     console.error('Purchase error:', err);
-                    showToast(err.reason || 'Transaction failed.', 'error');
+                    let errorMessage = 'Transaction failed.';
+                    
+                    if (err.reason) {
+                        errorMessage = err.reason;
+                    } else if (err.message) {
+                        if (err.message.includes('insufficient funds')) {
+                            errorMessage = 'Insufficient funds for transaction.';
+                        } else if (err.message.includes('user rejected')) {
+                            errorMessage = 'Transaction rejected by user.';
+                        } else if (err.message.includes('Insufficient')) {
+                            errorMessage = err.message;
+                        } else {
+                            errorMessage = err.message;
+                        }
+                    }
+                    
+                    showToast(errorMessage, 'error');
                 } finally {
                     buyBtn.disabled = false;
                     buyBtn.textContent = '🚀 Buy NEX Tokens';
                 }
             }
 
+            // Buy directly with USDC
+            async function buyWithUSDC(paymentAmount, userAddress) {
+                const usdcAmount = ethers.parseUnits(paymentAmount, 6); // USDC has 6 decimals
+                
+                // Check USDC balance
+                const usdcBalance = await usdcContract.balanceOf(userAddress);
+                if (usdcBalance < usdcAmount) {
+                    throw new Error('Insufficient USDC balance');
+                }
+                
+                // Check allowance
+                const allowance = await usdcContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
+                if (allowance < usdcAmount) {
+                    showToast('Approving USDC spend...', 'info');
+                    buyBtn.textContent = 'Approving...';
+                    const approveTx = await usdcContract.approve(PRESALE_CONTRACT_ADDRESS, usdcAmount);
+                    await approveTx.wait();
+                }
+                
+                buyBtn.textContent = 'Purchasing...';
+                showToast('Purchasing NEX tokens...', 'info');
+                
+                // Call the contract's buyTokens function
+                const buyTx = await presaleContract.buyTokens(usdcAmount);
+                await buyTx.wait();
+            }
+
+            // Buy with USDT (convert to USDC first via DEX)
+            async function buyWithUSDT(paymentAmount, userAddress) {
+                const usdtAmount = ethers.parseUnits(paymentAmount, 6); // USDT has 6 decimals
+                
+                // Check USDT balance
+                const usdtBalance = await usdtContract.balanceOf(userAddress);
+                if (usdtBalance < usdtAmount) {
+                    throw new Error('Insufficient USDT balance');
+                }
+
+                // Get quote for USDT -> USDC swap
+                const path = [USDT_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS];
+                const amounts = await routerContract.getAmountsOut(usdtAmount, path);
+                const usdcOut = amounts[1];
+                const minUsdcOut = usdcOut * 95n / 100n; // 5% slippage tolerance
+
+                buyBtn.textContent = 'Approving USDT...';
+                showToast('Approving USDT for swap...', 'info');
+
+                // Approve USDT for router
+                const usdtAllowance = await usdtContract.allowance(userAddress, QUICKSWAP_ROUTER_ADDRESS);
+                if (usdtAllowance < usdtAmount) {
+                    const approveTx = await usdtContract.approve(QUICKSWAP_ROUTER_ADDRESS, usdtAmount);
+                    await approveTx.wait();
+                }
+
+                buyBtn.textContent = 'Swapping to USDC...';
+                showToast('Swapping USDT to USDC...', 'info');
+
+                // Swap USDT to USDC
+                const deadline = Math.floor(Date.now() / 1000) + 300; // 5 minutes
+                const swapTx = await routerContract.swapExactTokensForTokens(
+                    usdtAmount,
+                    minUsdcOut,
+                    path,
+                    userAddress,
+                    deadline
+                );
+                await swapTx.wait();
+
+                buyBtn.textContent = 'Approving USDC...';
+                showToast('Approving USDC for presale...', 'info');
+
+                // Approve USDC for presale contract
+                const usdcAllowance = await usdcContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
+                if (usdcAllowance < usdcOut) {
+                    const approvePresaleTx = await usdcContract.approve(PRESALE_CONTRACT_ADDRESS, usdcOut);
+                    await approvePresaleTx.wait();
+                }
+
+                buyBtn.textContent = 'Purchasing...';
+                showToast('Purchasing NEX tokens...', 'info');
+
+                // Buy tokens with USDC
+                const buyTx = await presaleContract.buyTokens(usdcOut);
+                await buyTx.wait();
+            }
+
+            // Buy with POL/MATIC (convert to USDC first via DEX)
+            async function buyWithPOL(paymentAmount, userAddress) {
+                const polAmount = ethers.parseEther(paymentAmount); // POL has 18 decimals
+                
+                // Check POL balance
+                const polBalance = await provider.getBalance(userAddress);
+                if (polBalance < polAmount) {
+                    throw new Error('Insufficient POL balance');
+                }
+
+                // Get quote for POL -> USDC swap
+                const weth = await routerContract.WETH(); // This will be WMATIC
+                const path = [weth, USDC_CONTRACT_ADDRESS];
+                const amounts = await routerContract.getAmountsOut(polAmount, path);
+                const usdcOut = amounts[1];
+                const minUsdcOut = usdcOut * 95n / 100n; // 5% slippage tolerance
+
+                buyBtn.textContent = 'Swapping to USDC...';
+                showToast('Swapping POL to USDC...', 'info');
+
+                // Swap POL to USDC
+                const deadline = Math.floor(Date.now() / 1000) + 300; // 5 minutes
+                const swapTx = await routerContract.swapExactETHForTokens(
+                    minUsdcOut,
+                    path,
+                    userAddress,
+                    deadline,
+                    { value: polAmount }
+                );
+                await swapTx.wait();
+
+                buyBtn.textContent = 'Approving USDC...';
+                showToast('Approving USDC for presale...', 'info');
+
+                // Approve USDC for presale contract
+                const usdcAllowance = await usdcContract.allowance(userAddress, PRESALE_CONTRACT_ADDRESS);
+                if (usdcAllowance < usdcOut) {
+                    const approvePresaleTx = await usdcContract.approve(PRESALE_CONTRACT_ADDRESS, usdcOut);
+                    await approvePresaleTx.wait();
+                }
+
+                buyBtn.textContent = 'Purchasing...';
+                showToast('Purchasing NEX tokens...', 'info');
+
+                // Buy tokens with USDC
+                const buyTx = await presaleContract.buyTokens(usdcOut);
+                await buyTx.wait();
+            }
+            
+
             // --- Presale Status & Countdown ---
             let countdownInterval;
             async function updatePresaleStatus() {
-                if(!presaleContract && typeof ethers !== 'undefined') {
-                     const tempProvider = new ethers.JsonRpcProvider("https://rpc-amoy.polygon.technology/");
-                     presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_CONTRACT_ABI, tempProvider);
+                // If no presale contract connected, try to create read-only connection
+                if (!presaleContract && PRESALE_CONTRACT_ADDRESS !== "YOUR_PRESALE_CONTRACT_ADDRESS_HERE") {
+                    try {
+                        const tempProvider = new ethers.JsonRpcProvider("https://polygon-rpc.com/");
+                        presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, tempProvider);
+                    } catch (error) {
+                        console.log("Could not create read-only presale contract:", error);
+                        return;
+                    }
                 } else if (!presaleContract) {
+                    console.log("No presale contract available");
                     return;
                 }
 
                 try {
-                    const [weiRaised, hardCap, remainingTime] = await Promise.all([
-                        presaleContract.weiRaised(),
-                        presaleContract.hardCap(),
-                        presaleContract.getRemainingTime()
+                    // Fetch presale data from contract
+                    const [usdcRaised, hardCapInUsdc, startTime, endTime, tokenPriceCents] = await Promise.all([
+                        presaleContract.usdcRaised(),
+                        presaleContract.hardCapInUsdc(),
+                        presaleContract.startTime(),
+                        presaleContract.endTime(),
+                        presaleContract.TOKEN_PRICE_IN_CENTS()
                     ]);
                     
-                    const raised = parseFloat(ethers.formatEther(weiRaised)).toFixed(2);
-                    const cap = parseFloat(ethers.formatEther(hardCap)).toFixed(0);
-
-                    weiRaisedEl.textContent = raised;
-                    hardCapEl.textContent = cap;
-                    document.getElementById('tokenPrice').textContent = `${tokenPrice}`;
+                    // Convert USDC amounts (6 decimals) to display values
+                    const raisedInUsdc = parseFloat(ethers.formatUnits(usdcRaised, 6));
+                    const hardCapInUsdcFormatted = parseFloat(ethers.formatUnits(hardCapInUsdc, 6));
                     
-                    const progress = (raised / cap) * 100;
-                    progressBar.style.width = `${progress}%`;
+                    // Update progress display
+                    const usdcRaisedEl = document.getElementById('usdcRaised');
+                    const hardCapEl = document.getElementById('hardCap');
+                    const progressBar = document.getElementById('progressBar');
+                    const progressPercentageEl = document.getElementById('progressPercentage');
+                    
+                    if (usdcRaisedEl) usdcRaisedEl.textContent = raisedInUsdc.toLocaleString();
+                    if (hardCapEl) hardCapEl.textContent = hardCapInUsdcFormatted.toLocaleString();
+                    
+                    const progress = (raisedInUsdc / hardCapInUsdcFormatted) * 100;
+                    if (progressBar) progressBar.style.width = `${progress}%`;
+                    if (progressPercentageEl) progressPercentageEl.textContent = progress.toFixed(1) + '%';
 
+                    // Clear existing countdown
                     if (countdownInterval) clearInterval(countdownInterval);
                     
-                    if (Number(remainingTime) > 0) {
-                        let duration = Number(remainingTime);
-                        presaleActiveView.classList.remove('hidden');
-                        presaleEndedView.classList.add('hidden');
-                        
-                        countdownInterval = setInterval(() => {
-                            if (duration <= 0) {
-                                clearInterval(countdownInterval);
-                                presaleActiveView.classList.add('hidden');
-                                presaleEndedView.classList.remove('hidden');
-                                return;
-                            }
-                            duration--;
-                            const d = Math.floor(duration / (3600*24));
-                            const h = Math.floor(duration % (3600*24) / 3600);
-                            const m = Math.floor(duration % 3600 / 60);
-                            const s = Math.floor(duration % 60);
-                            document.getElementById('days').textContent = d.toString().padStart(2, '0');
-                            document.getElementById('hours').textContent = h.toString().padStart(2, '0');
-                            document.getElementById('minutes').textContent = m.toString().padStart(2, '0');
-                            document.getElementById('seconds').textContent = s.toString().padStart(2, '0');
-                        }, 1000);
+                    // Convert contract timestamps to milliseconds
+                    const startTimeMs = Number(startTime) * 1000;
+                    const endTimeMs = Number(endTime) * 1000;
+                    const currentTimeMs = Date.now();
+                    
+                    // Check presale status
+                    if (currentTimeMs < startTimeMs) {
+                        // Presale hasn't started yet - countdown to start
+                        startCountdown(startTimeMs, "Presale Starts In");
+                        showPresaleNotStarted();
+                    } else if (currentTimeMs >= startTimeMs && currentTimeMs <= endTimeMs) {
+                        // Presale is active - countdown to end
+                        startCountdown(endTimeMs, "Presale Ends In");
+                        showPresaleActive();
                     } else {
-                        presaleActiveView.classList.add('hidden');
-                        presaleEndedView.classList.remove('hidden');
+                        // Presale has ended
+                        showPresaleEnded();
                     }
-                } catch(e) {
-                    console.error("Could not fetch presale status", e);
+
+                } catch (error) {
+                    console.error("Error fetching presale status:", error);
+                    // Fallback to default countdown if contract read fails
+                    startDefaultCountdown();
                 }
+            }
+            
+            function startCountdown(targetTimeMs, labelText = "Time Remaining") {
+                // Update countdown label if element exists
+                const countdownLabel = document.getElementById('countdownLabel');
+                if (countdownLabel) countdownLabel.textContent = labelText;
+                
+                function updateCountdown() {
+                    const currentTimeMs = Date.now();
+                    const distance = targetTimeMs - currentTimeMs;
+                    
+                    if (distance < 0) {
+                        clearInterval(countdownInterval);
+                        // Refresh presale status when countdown ends
+                        updatePresaleStatus();
+                        return;
+                    }
+                    
+                    // Calculate time units
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    // Update countdown display
+                    const daysEl = document.getElementById('days');
+                    const hoursEl = document.getElementById('hours');
+                    const minutesEl = document.getElementById('minutes');
+                    const secondsEl = document.getElementById('seconds');
+                    
+                    if (daysEl) daysEl.textContent = days.toString().padStart(2, '0');
+                    if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
+                    if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+                    if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
+                }
+                
+                // Start the countdown
+                updateCountdown();
+                countdownInterval = setInterval(updateCountdown, 1000);
+            }
+            
+            function startDefaultCountdown() {
+                // Fallback countdown (12 months from now)
+                const targetTime = Date.now() + (365 * 24 * 60 * 60 * 1000);
+                startCountdown(targetTime, "Estimated Time Remaining");
+            }
+            
+            function showPresaleActive() {
+                const presaleActiveView = document.getElementById('presale-active');
+                const presaleEndedView = document.getElementById('presale-ended');
+                
+                if (presaleActiveView) presaleActiveView.classList.remove('hidden');
+                if (presaleEndedView) presaleEndedView.classList.add('hidden');
+            }
+            
+            function showPresaleEnded() {
+                const presaleActiveView = document.getElementById('presale-active');
+                const presaleEndedView = document.getElementById('presale-ended');
+                
+                if (presaleActiveView) presaleActiveView.classList.add('hidden');
+                if (presaleEndedView) presaleEndedView.classList.remove('hidden');
+                
+                // Clear countdown
+                if (countdownInterval) clearInterval(countdownInterval);
+            }
+            
+            function showPresaleNotStarted() {
+                const presaleActiveView = document.getElementById('presale-active');
+                const presaleEndedView = document.getElementById('presale-ended');
+                
+                if (presaleActiveView) presaleActiveView.classList.remove('hidden');
+                if (presaleEndedView) presaleEndedView.classList.add('hidden');
+                
+                // Show "Coming Soon" message in the buy section
+                const connectWalletView = document.getElementById('connect-wallet-view');
+                const buyView = document.getElementById('buy-view');
+                
+                if (connectWalletView) {
+                    connectWalletView.innerHTML = `
+                        <div class="text-center py-8">
+                            <h4 class="text-xl font-bold text-yellow-400 mb-2">🚀 Presale Starting Soon!</h4>
+                            <p class="text-gray-300">Get ready to secure your NEX tokens</p>
+                        </div>
+                    `;
+                }
+                if (buyView) buyView.classList.add('hidden');
             }
             
             // --- Tokenomics Chart ---
@@ -2556,6 +3066,205 @@
             updateCurrencyUI();
             renderTokenomicsChart();
             updatePresaleStatus();
+        });
+    </script>
+    <!-- Main JavaScript for Presale -->    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Set up countdown for 12 months
+            function setupCountdown() {
+                // Current date plus presale duration (365 days)
+                const countdownDate = new Date();
+                countdownDate.setDate(countdownDate.getDate() + CONFIG.presaleDurationDays);
+                
+                function updateCountdown() {
+                    const now = new Date().getTime();
+                    const distance = countdownDate - now;
+                    
+                    // Time calculations
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    // Display the result
+                    document.getElementById('days').innerText = days.toString().padStart(2, '0');
+                    document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                    document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                    document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+                    
+                    // If the countdown is finished, show expired message
+                    if (distance < 0) {
+                        clearInterval(countdownInterval);
+                        document.getElementById('presale-active').classList.add('hidden');
+                        document.getElementById('presale-ended').classList.remove('hidden');
+                    }
+                }
+                
+                // Update countdown every second
+                updateCountdown();
+                const countdownInterval = setInterval(updateCountdown, 1000);
+            }
+            
+            // Initialize progress bar with sample data (will be updated from contract)
+            function initializeProgressBar() {
+                const progressBar = document.getElementById('progressBar');
+                const progressPercentage = document.getElementById('progressPercentage');
+                const usdcRaised = document.getElementById('usdcRaised');
+                const hardCap = document.getElementById('hardCap');
+                
+                // Sample data - will be replaced with actual contract data
+                const raised = 0;
+                const cap = 15000000;
+                const percentage = (raised / cap) * 100;
+                
+                if (progressBar && progressPercentage && usdcRaised && hardCap) {
+                    progressBar.style.width = percentage + '%';
+                    progressPercentage.innerText = percentage.toFixed(2) + '%';
+                    usdcRaised.innerText = raised.toLocaleString();
+                    hardCap.innerText = cap.toLocaleString();
+                }
+            }
+            
+            // Currency selection
+            const currencyOptions = document.querySelectorAll('.currency-option');
+            const currencyBadge = document.getElementById('currencyBadge');
+            const currencySymbol = document.getElementById('currencySymbol');
+            let selectedCurrency = 'POL';
+            
+            currencyOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    currencyOptions.forEach(opt => opt.classList.remove('active'));
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Update selected currency
+                    selectedCurrency = this.getAttribute('data-currency');
+                    if (currencyBadge) currencyBadge.innerText = selectedCurrency;
+                    
+                    // Update currency symbol
+                    if (currencySymbol) {
+                        let symbolUrl = '';
+                        switch (selectedCurrency) {
+                            case 'POL':
+                                symbolUrl = 'https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/matic.svg';
+                                break;
+                            case 'USDC':
+                                symbolUrl = 'https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdc.svg';
+                                break;
+                            case 'USDT':
+                                symbolUrl = 'https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/usdt.svg';
+                                break;
+                        }
+                        currencySymbol.src = symbolUrl;
+                    }
+                    
+                    // Update conversion rate
+                    updateConversionRate();
+                });
+            });
+            
+            // Payment amount input handling
+            const paymentAmountInput = document.getElementById('paymentAmount');
+            const nexAmountInput = document.getElementById('nexAmount');
+            
+            function updateConversionRate() {
+                if (!paymentAmountInput || !nexAmountInput) return;
+                
+                const amount = parseFloat(paymentAmountInput.value) || 0;
+                let nexAmount = 0;
+                
+                // Convert based on selected currency
+                switch (selectedCurrency) {
+                    case 'POL':
+                        // Assuming 1 MATIC = $0.50 (this should be fetched from an API in production)
+                        nexAmount = (amount * 0.50) / CONFIG.presaleTokenPrice;
+                        break;
+                    case 'USDC':
+                    case 'USDT':
+                        // 1:1 with USD
+                        nexAmount = amount / CONFIG.presaleTokenPrice;
+                        break;
+                }
+                
+                nexAmountInput.value = nexAmount.toFixed(2);
+            }
+            
+            if (paymentAmountInput) {
+                paymentAmountInput.addEventListener('input', updateConversionRate);
+            }
+            
+            // Buy button functionality
+            function initializePurchase() {
+                const buyBtn = document.getElementById('buyBtn');
+                
+                if (buyBtn) {
+                    buyBtn.addEventListener('click', async function() {
+                        if (!provider || !signer) {
+                            alert('Please connect your wallet first!');
+                            return;
+                        }
+                        
+                        const amount = parseFloat(paymentAmountInput.value) || 0;
+                        if (amount <= 0) {
+                            alert('Please enter a valid amount!');
+                            return;
+                        }
+                        
+                        // Minimum purchase check
+                        let usdValue = 0;
+                        switch (selectedCurrency) {
+                            case 'POL':
+                                usdValue = amount * 0.50; // Estimated MATIC price
+                                break;
+                            case 'USDC':
+                            case 'USDT':
+                                usdValue = amount;
+                                break;
+                        }
+                        
+                        if (usdValue < CONFIG.minPurchaseUsd) {
+                            alert(`Minimum purchase is $${CONFIG.minPurchaseUsd}!`);
+                            return;
+                        }
+                        
+                        try {
+                            buyBtn.disabled = true;
+                            buyBtn.innerText = 'Processing...';
+                            
+                            // In production, this would interact with the actual contract
+                            alert('This is a demo. In production, this would process your purchase of ' + 
+                                  nexAmountInput.value + ' NEX tokens for ' + 
+                                  amount + ' ' + selectedCurrency);
+                            
+                            // Reset after demo
+                            buyBtn.disabled = false;
+                            buyBtn.innerText = '🚀 Buy NEX Tokens';
+                            
+                        } catch (error) {
+                            console.error('Purchase error:', error);
+                            alert('Transaction failed: ' + error.message);
+                            buyBtn.disabled = false;
+                            buyBtn.innerText = '🚀 Buy NEX Tokens';
+                        }
+                    });
+                }
+            }
+            
+            // Initialize components
+            setupCountdown();
+            initializeProgressBar();
         });
     </script>
 </body>
